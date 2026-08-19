@@ -1,10 +1,24 @@
 import type { Request,Response } from "express";
-import { generate } from "../services/Link_services";
+import linkServices from "../services/Link_services";
+import linkRepository from "../repository/link_repository";
+import {RedirectLinkParams} from "../validator/link_validator";
+import z from "zod";
 
 
 
-export async function generateLinkController(req:Request,res:Response): Promise<Response>{
-    const longUrl:String=req.body.longUrl;
-    const ShortUrl=generate()
 
+export async function  createLinkController(req:Request,res:Response): Promise<Response>{
+    const longUrl:string=req.body.longUrl;
+    const userId:string=res.locals.userId;
+    const link=await linkServices.generate(longUrl,userId);
+    return res.status(201).json({message:"Link created successfully",shortCode:link.shortCode});
+
+}
+export async function redirectLinkController(req: Request<RedirectLinkParams>,res:Response): Promise<void|Response>{
+    const shortCode:string=req.params.shortCode;
+    const link=await linkRepository.findLinkByShortCode(shortCode);
+    if(!link){
+        return res.status(404).json({message:"Link not found"});
+    }
+    return res.status(302).redirect(link.longUrl);
 }

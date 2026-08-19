@@ -23,7 +23,7 @@ async function SignInService(email:string,password:string){
     if(!isMatch){
         return null;
     }
-    const token=jwt.sign({id:user._id},process.env.JWT_SECRET as string,{expiresIn:"1h"});
+    const token=jwt.sign({userId:user._id},process.env.JWT_SECRET as string,{expiresIn:"1h"});
 
     return token;
 }

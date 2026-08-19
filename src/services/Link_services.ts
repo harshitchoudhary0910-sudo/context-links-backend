@@ -15,7 +15,7 @@ function generateShortCode(length = 7): string {
     return result;
 }
 
-export async function generate(url: string, ownerId: string) {
+ async function generate(url: string, ownerId: string) {
 
     while (true) {
         const shortCode = generateShortCode();
@@ -40,4 +40,6 @@ export async function generate(url: string, ownerId: string) {
         }
     }
 }
+
+export default {generate}
 
