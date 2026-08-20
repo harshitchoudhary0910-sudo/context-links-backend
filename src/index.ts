@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieParser from "cookie-parser";
 import { errorMiddleware } from './middlewares/error_middleware';
+import cors from "cors"
 
 
 import authRoutes from './routes/auth_routes';
@@ -12,6 +13,10 @@ dotenv.config();
 
 const app=express();
 connectToDatabase();
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 
 
 app.use(cookieParser());
