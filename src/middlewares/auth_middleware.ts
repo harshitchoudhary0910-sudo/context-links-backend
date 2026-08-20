@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { AppError } from "../AppError";
 
 interface JwtPayload {
     userId: string;
@@ -10,16 +11,19 @@ export function authMiddleware(
     res: Response,
     next: NextFunction
 ) {
-    try {
-            console.log("COOKIES:", req.cookies);
-    console.log("TOKEN:", req.cookies.token);
+    
+
         const token: string | undefined = req.cookies.token;
 
         if (!token) {
-            return res.status(401).json({
-                message: "Access denied"
-            });
+throw new AppError(
+    "missing token",
+    401,
+    "UNAUTHORIZED ACCESSS"
+
+)
         }
+        try{
 
         const decoded = jwt.verify(
             token,
@@ -31,9 +35,13 @@ export function authMiddleware(
         next();
 
     } catch(error) {
-        console.log(error)
-        return res.status(401).json({
-            message: "Invalid token"
-        });
+        throw new AppError(
+            "invalid or expored token",
+            401,
+           "UNAUTHORIZED_ACCESS"
+
+        )
+       
+
     }
 }

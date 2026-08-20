@@ -3,6 +3,7 @@ import linkServices from "../services/Link_services";
 import linkRepository from "../repository/link_repository";
 import {RedirectLinkParams} from "../validator/link_validator";
 import z from "zod";
+import { AppError } from "../AppError";
 
 
 
@@ -18,7 +19,11 @@ export async function redirectLinkController(req: Request<RedirectLinkParams>,re
     const shortCode:string=req.params.shortCode;
     const link=await linkRepository.findLinkByShortCode(shortCode);
     if(!link){
-        return res.status(404).json({message:"Link not found"});
+       throw new AppError(
+        "shourtcode not found",
+        404,
+        "SHORTCODE NOT FOUND"
+       )
     }
     return res.status(302).redirect(link.longUrl);
 }

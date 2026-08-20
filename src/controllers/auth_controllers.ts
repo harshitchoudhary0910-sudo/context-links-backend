@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import AuthServices from "../services/auth_services";
 
 import { SignUpSchemaType,SignInSchemaType } from "../validator/auth_validator";
+import { AppError } from "../AppError";
 
 
 export async function signUpController(req: Request, res: Response): Promise<Response> {
@@ -10,7 +11,11 @@ export async function signUpController(req: Request, res: Response): Promise<Res
     const newUser = await AuthServices.SignUpService(name, email, password);
 
     if (newUser===null) {
-        return res.status(400).json({ message: "User already exists" });
+        throw new AppError(
+            "User already exists",
+            400,
+            "USER_EXISTS"
+        )
     }
 
     return res.status(201).json({ message: "User created successfully"});
@@ -21,7 +26,11 @@ export async function signInController(req: Request, res: Response): Promise<Res
 
     const token = await AuthServices.SignInService(email, password);
     if (!token) {
-        return res.status(401).json({ message: "Invalid credentials" });
+       throw new AppError(
+        "invalid credentials",
+        401,
+        "INVALID_CREDENTIALS"
+       )
     }
     res.cookie("token", token, {
         httpOnly: true,
