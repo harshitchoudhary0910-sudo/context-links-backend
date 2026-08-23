@@ -10,7 +10,14 @@ import { AppError } from "../AppError";
 
 export async function  createLinkController(req:Request,res:Response): Promise<Response>{
     const longUrl:string=req.body.longUrl;
-    const userId:string=res.locals.userId;
+    const userId=req.userId;
+    if (!userId) {
+  throw new AppError(
+    "User ID missing",
+    401,
+    "UNAUTHORIZED_ACCESS"
+  );
+};
     const link=await linkServices.generate(longUrl,userId);
     return res.status(201).json({message:"Link created successfully",shortCode:link.shortCode});
 

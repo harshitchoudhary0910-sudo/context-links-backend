@@ -30,7 +30,7 @@ throw new AppError(
             process.env.JWT_SECRET!
         ) as JwtPayload;
 
-        res.locals.userId = decoded.userId;
+        req.userId = decoded.userId;
 
         next();
 

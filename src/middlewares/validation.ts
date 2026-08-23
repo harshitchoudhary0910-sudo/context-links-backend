@@ -35,10 +35,13 @@ export function validateParams(schema: ZodType) {
         });
 
         if (!result.success) {
-            return res.status(400).json({
-                message: "Validation failed",
-                errors: result.error.flatten().fieldErrors
-            });
+            throw new AppError(
+            "validation failed",
+            400,
+            "VALIDATION_FAILED",
+            result.error.flatten().fieldErrors
+        )
+
         }
 
         req.params = result.data.params;
