@@ -3,6 +3,7 @@ import linkServices from "../services/Link_services";
 import linkRepository from "../repository/link_repository";
 import {RedirectLinkParams} from "../validator/link_validator";
 import z from "zod";
+import LinkModel from "../models/link_model";
 import { AppError } from "../AppError";
 
 
@@ -34,3 +35,33 @@ export async function redirectLinkController(req: Request<RedirectLinkParams>,re
     }
     return res.status(302).redirect(link.longUrl);
 }
+
+export async function getLinksController(req:Request,res:Response){
+    const cursor=req.query.cursor;
+    const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 10;
+
+    const query:any={userId:req.userId};
+
+      if (cursor) {
+        query._id = { $lt: cursor }; 
+    }
+
+    const links:any = await LinkModel.find(query)
+        .limit(limit + 1)
+        .sort({ _id: -1 });
+
+    const hasNextPage = links.length > limit;
+    if (hasNextPage) links.pop();
+
+    res.json({
+        links,
+        nextCursor: hasNextPage ? links[links.length - 1]._id : null
+    });
+}
+
+
+
+
+
+
+

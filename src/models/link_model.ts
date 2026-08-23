@@ -21,6 +21,8 @@ const LinkSchema=new mongoose.Schema({
         default:0,
         
     }
+    
 
 })
+LinkSchema.index({ userId: 1, _id: -1 });
 export default mongoose.model("links",LinkSchema);
