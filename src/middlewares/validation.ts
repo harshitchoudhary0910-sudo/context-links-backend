@@ -30,7 +30,7 @@ export function validateParams(schema: ZodType) {
         next: NextFunction
     ) => {
 
-        const result = schema.safeParse({
+        const result:any = schema.safeParse({
             params: req.params
         });
 
