@@ -11,7 +11,7 @@ export const authLimiter = rateLimit({
 export const linkLimiter = rateLimit({
     windowMs: 24 * 60 * 60 * 1000,
     limit: 10,
-   keyGenerator: (req) => req.userId || req.ip || 'unknown',
+   keyGenerator: (req) => req.userId,
     message: { message: "Daily limit of 10 links reached, try tomorrow" }
 });
 
