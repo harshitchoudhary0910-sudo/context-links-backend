@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import express from 'express';
 import cookieParser from "cookie-parser";
 import { errorMiddleware } from './middlewares/error_middleware';
@@ -5,7 +6,7 @@ import cors from "cors";
 import authRoutes from './routes/auth_routes';
 import linkRoutes from './routes/link_routes';
 import { connectToDatabase } from './config/db';
-import dotenv from "dotenv";
+
 
 if (process.env.NODE_ENV !== 'production') {
     dotenv.config();

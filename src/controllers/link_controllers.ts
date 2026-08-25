@@ -7,8 +7,6 @@ import LinkModel from "../models/link_model";
 import { AppError } from "../AppError";
 
 
-
-
 export async function  createLinkController(req:Request,res:Response): Promise<Response>{
     const longUrl:string=req.body.longUrl;
     const userId=req.userId;
@@ -23,17 +21,14 @@ export async function  createLinkController(req:Request,res:Response): Promise<R
     return res.status(201).json({message:"Link created successfully",shortCode:link.shortCode});
 
 }
+
 export async function redirectLinkController(req: Request<RedirectLinkParams>,res:Response): Promise<void|Response>{
     const shortCode:string=req.params.shortCode;
-    const link=await linkRepository.findLinkByShortCode(shortCode);
-    if(!link){
-       throw new AppError(
-        "shourtcode not found",
-        404,
-        "SHORTCODE NOT FOUND"
-       )
-    }
-    return res.status(302).redirect(link.longUrl);
+
+
+    const longUrl=await linkServices.redirect(shortCode);
+
+    return res.status(302).redirect(longUrl);
 }
 
 export async function getLinksController(req:Request,res:Response){
